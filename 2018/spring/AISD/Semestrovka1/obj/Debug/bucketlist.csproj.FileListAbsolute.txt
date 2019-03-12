@@ -1,7 +1,0 @@
-C:\Users\Тест\source\repos\bucketlist\bucketlist\bin\Debug\bucketlist.exe.config
-C:\Users\Тест\source\repos\bucketlist\bucketlist\bin\Debug\bucketlist.exe
-C:\Users\Тест\source\repos\bucketlist\bucketlist\bin\Debug\bucketlist.pdb
-C:\Users\Тест\source\repos\bucketlist\bucketlist\obj\Debug\bucketlist.csprojAssemblyReference.cache
-C:\Users\Тест\source\repos\bucketlist\bucketlist\obj\Debug\bucketlist.csproj.CoreCompileInputs.cache
-C:\Users\Тест\source\repos\bucketlist\bucketlist\obj\Debug\bucketlist.exe
-C:\Users\Тест\source\repos\bucketlist\bucketlist\obj\Debug\bucketlist.pdb
