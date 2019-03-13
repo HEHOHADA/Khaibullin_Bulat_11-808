@@ -10,7 +10,7 @@ namespace bucketlist
 {
     public class BucketSortLinked
     {// счетчик
-        static int interationsLinked = 0;
+        static int iterationLinked = 0;
 
         public static int[] BucketSortWithLinked(int[] unsorted)
         {
@@ -22,18 +22,18 @@ namespace bucketlist
             for (int i = 0; i < bucketCount; i++)
             {
                 buck.Add(new LinkedList<int>());
-                interationsLinked++;
+                iterationLinked++;
             }
             for (int i = 0; i < unsorted.Length; i++)
             {// загружаю по бакетам
-                interationsLinked++;
+                iterationLinked++;
                 var number = unsorted[i];
                 var bucketIndex = (number - min) / bucketSize;
                 buck[bucketIndex].AddFirst(number);
             }
             foreach (var e in buck)
             {
-                interationsLinked++;
+                iterationLinked++;
                 SortLinked(e);
             }
             // соединение в исходный массив
@@ -45,26 +45,26 @@ namespace bucketlist
             var secondList = new LinkedList<int>();
             while (list.Count != 0)
             {
-                interationsLinked++;
+                iterationLinked++;
                 var max = list.Max();
                 secondList.AddFirst(max);
                 list.Remove(max);
             }
             foreach (var e in secondList)
             {
-                interationsLinked++;
+                iterationLinked++;
                 list.AddLast(e);
             }
         }
 
-        public static void MeasureTimeIntegration(int[] array, Func<int[], int[]> searchProcedure, Series series)
+        public static void MeasureTimeItegration(int[] array, Func<int[], int[]> searchProcedure, Series series)
         {
             var watch = new Stopwatch();
             watch.Start();
                 searchProcedure(array);
             watch.Stop();
-            series.Points.Add(new DataPoint(array.Length,interationsLinked));
-            interationsLinked = 0;
+            series.Points.Add(new DataPoint(array.Length,iterationLinked));
+            iterationLinked = 0;
         }
     }
 }

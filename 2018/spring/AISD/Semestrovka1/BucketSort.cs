@@ -31,8 +31,8 @@ namespace bucketlist
                 // поо два Графика, запускал отдельно
                //DrawGraph.MeasureTime(array, BucketSort.BucketSortWithArray, arrayGraph);
                 //DrawGraph.MeasureTime(array, BucketSortLinked.BucketSortWithLinked, linkedGraph);
-                BucketSort.MeasureTimeIntegration(array, BucketSort.BucketSortWithArray, arrayGraph);
-                BucketSortLinked.MeasureTimeIntegration(array, BucketSortLinked.BucketSortWithLinked, linkedGraph);
+                BucketSort.MeasureTimeItegration(array, BucketSort.BucketSortWithArray, arrayGraph);
+                BucketSortLinked.MeasureTimeItegration(array, BucketSortLinked.BucketSortWithLinked, linkedGraph);
             }
             var chart = DrawGraph.MakeChart(arrayGraph, linkedGraph);
             var form = new Form();
@@ -44,7 +44,7 @@ namespace bucketlist
 
     public class BucketSort
     {
-        static int interationsArray = 0;
+        static int iterationArray = 0;
 
         public static int[] BucketSortWithArray(int[] unsorted)
         {
@@ -56,33 +56,33 @@ namespace bucketlist
             for (int i = 0; i < bucketCount; i++)
             {
                 buck[i] = new List<int>();
-                interationsArray++;
+                iterationArray++;
             }
             for (int i = 0; i < unsorted.Length; i++)
             {// по бакетам
                 var number = unsorted[i];
                 var bucketIndex = (number - min) / bucketSize;
                 buck[bucketIndex].Add(number);
-                interationsArray++;
+                iterationArray++;
             }
 
             foreach (var bucket in buck)
             {
-                interationsArray++;
+                iterationArray++;
                 bucket.Sort();
             }
             // соединение в исходный массив
             return buck.SelectMany(x => x).ToArray();
         }
 
-        public static void MeasureTimeIntegration(int[] array, Func<int[], int[]> searchProcedure, Series series)
+        public static void MeasureTimeItegration(int[] array, Func<int[], int[]> searchProcedure, Series series)
         {
             var watch = new Stopwatch();
             watch.Start();
                 searchProcedure(array);
             watch.Stop();
-            series.Points.Add(new DataPoint(array.Length, interationsArray));
-            interationsArray = 0;
+            series.Points.Add(new DataPoint(array.Length, iterationArray));
+            iterationArray = 0;
         }
 
     }
