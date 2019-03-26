@@ -1,0 +1,7 @@
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\bin\Debug\LINQTEST.exe.config
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\bin\Debug\LINQTEST.exe
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\bin\Debug\LINQTEST.pdb
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\obj\Debug\LINQTEST.csprojAssemblyReference.cache
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\obj\Debug\LINQTEST.csproj.CoreCompileInputs.cache
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\obj\Debug\LINQTEST.exe
+C:\Users\Тест\bulat\2018\spring\LINQTEST\LINQTEST\LINQTEST\obj\Debug\LINQTEST.pdb
