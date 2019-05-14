@@ -5,62 +5,64 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
+using Newtonsoft.Json;
+using System.Net;
 
 namespace INFATEST
 {
-    class Program
+    public class Program
     {
-        const string main = "C: \\Users\\Тест\\source\\repos\\INFATEST\\INFATEST\\Student";
+        const string main = "C:\\Users\\bulat\\source\\repos\\INFATEST\\INFATEST\\Student";
+        const double ansForEx1 = 2;
+        const double ansForEx2 = 2.5;
         static void Main(string[] args)
         {
             if (Directory.Exists(main))
-            {
+            {//читаю все файлы и вывожу
                 foreach (var e in Directory.EnumerateFiles(main))
                     Console.WriteLine(e);
             }
-            Console.ReadKey();
-            if (Directory.Exists(main + "//Invanov"))
-            {
-                string input = File.ReadAllText(main + "//Invanov//ex1.txt");
-                var list = input.Split(';').ToList();
-                var type = typeof(Student);
-                var ob = Activator.CreateInstance(type);
-
-
-                ConstructorInfo constructor = type.GetConstructor(new Type[] { });
-                var param = list[2].Split(',').Select(x => Convert.ToInt32(x)).ToArray();
-                object[] mas = new object[2];
-                for (int i = 0; i < 2; i++)
-                    mas[i] = param[i];
-                var magicClass = constructor.Invoke(new object[] { });
-                var e = type.GetMethod(list[1].Trim());
-                var var = (int)type.GetMethod(list[1].Trim()).Invoke(magicClass, mas);
-                //var variant = (int)type.InvokeMember(list[1].Trim(), BindingFlags.InvokeMethod, null, f, new object[] { param });
-                Console.WriteLine(var);
-            }
+            foreach (var e in Task12())// для 3 задания(таблица)
+                Console.WriteLine(e.SecondName + " " + e.TrueAsks);
             Console.ReadKey();
         }
 
-        public double Task2(string a)
+        public static List<Student> Task12()
         {
-
-            string input = File.ReadAllText(main + a + "//ex1.txt");
-            var list = input.Split(';').ToList();
-            var type = typeof(Student);
-            var ob = Activator.CreateInstance(type);
-            ConstructorInfo constructor = type.GetConstructor(new Type[] { });
-            var param = list[2].Split(',').Select(x => Convert.ToInt32(x)).ToArray();
-            object[] mas = new object[2];
-            for (int i = 0; i < 2; i++)
-                mas[i] = param[i];
-            var magicClass = constructor.Invoke(new object[] { });
-            var e = type.GetMethod(list[1].Trim());
-            var var = (int)type.GetMethod(list[1].Trim()).Invoke(magicClass, mas);
-            //var variant = (int)type.InvokeMember(list[1].Trim(), BindingFlags.InvokeMethod, null, f, new object[] { param });
-            Console.WriteLine(var);
-            return var;
-
+            var result = new List<Student>();
+            if (Directory.Exists(main))// беру все файлы и в нем все папки
+                foreach (var name in Directory.GetDirectories(main))
+                {
+                    var files = Directory.GetFiles(name);
+                    var secondName = new DirectoryInfo(name).Name;
+                    int i = 0;// удачные задания
+                    foreach (var file in files)
+                    {
+                        string input = File.ReadAllText(file);
+                        var list = input.Split(';').ToList();
+                        var type = Type.GetType("INFATEST."+list[0].Trim());
+                        ConstructorInfo constructor = type.GetConstructor(new Type[] { });
+                        var param = list[2].Split(',').Select(x => Convert.ToInt32(x)).ToArray();
+                        object[] mas = param.Select(x => (object)x).ToArray(); 
+                        var magicClass = constructor.Invoke(new object[] { });
+                        var var = (double)type.GetMethod(list[1].Trim()).Invoke(magicClass, mas);
+                        if ((list[1].Trim() == "Calculate" && var == ansForEx1) || (list[1].Trim() == "Divide" && var == ansForEx2))
+                            i++;
+                    }
+                    result.Add(new Student(i, secondName));
+                }
+            return result ;
         }
+
+        //public void Task2()
+        //{
+        //    var link = @"https://jsonplaceholder.typicode.com/comments";
+                       
+
+
+        //}
+        
+
     }
+
 }
