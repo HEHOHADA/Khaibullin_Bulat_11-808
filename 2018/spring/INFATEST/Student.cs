@@ -15,19 +15,13 @@ namespace INFATEST
             TrueAsks = trueAsk;
             SecondName = name;
         }
-        public Student()
+        public Student()//пустой конструктор для рефлексии
         {
             TrueAsks = 0;
             SecondName = null;
         }
-        public double Calculate(int a, int b)
-        {
-            return a * b;
-        }
+        public double Calculate(int a, int b) => a * b;
 
-        public double Divide(int a, int b)
-        {
-            return (double)a / b;
-        }
+        public double Divide(int a, int b) => (double)a / b;
     }
 }
