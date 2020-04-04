@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using VKMVC.DB;
+using VKMVC.Filter;
 using VKMVC.Models;
 
 namespace VKMVC.Controllers
@@ -19,7 +20,7 @@ namespace VKMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [UserFilter]
         public IActionResult Create()
         {
             return View();
@@ -27,7 +28,7 @@ namespace VKMVC.Controllers
 
 
         [HttpPost]
-        [Authorize]
+        [UserFilter]
         public async Task<IActionResult> Create(PostModel model)
         {
             var post = await dataBase.Posts.AddAsync(new PostModel
@@ -41,7 +42,7 @@ namespace VKMVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        [UserFilter]
         public IActionResult Edit(int id)
         {
             var post = dataBase.Posts.FirstOrDefault(p => p.Id == id);
@@ -56,7 +57,7 @@ namespace VKMVC.Controllers
         }
         
         [HttpPost]
-        [Authorize]
+        [UserFilter]
         public async Task<IActionResult> Edit(PostModel model, int id)
         {
             var post = dataBase.Posts.FirstOrDefault(p => p.Id == id);
@@ -73,7 +74,7 @@ namespace VKMVC.Controllers
        
 
         [HttpGet]
-        [Authorize]
+        [UserFilter]
         public async Task<IActionResult> Delete(int id)
         {
             dataBase.Posts.Remove(dataBase.Posts.First(p => p.Id == id));

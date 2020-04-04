@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using VKMVC.DB;
+using VKMVC.Filter;
 using VKMVC.Models;
 using VKMVC.ViewModels;
 
@@ -55,6 +56,7 @@ namespace VKMVC.Controllers
         }
 
         [HttpGet]
+        [Admin]
         public IActionResult Edit(int id)
         {
             var comment = dataBase.Comments.FirstOrDefault(c => c.Id == id);
@@ -64,6 +66,7 @@ namespace VKMVC.Controllers
         }
 
         [HttpPost]
+        [Admin]
         public async Task<IActionResult> Edit(CommentModel model, int id)
         {
             var comment = dataBase.Comments

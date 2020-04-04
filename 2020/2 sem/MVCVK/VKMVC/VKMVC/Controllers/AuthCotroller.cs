@@ -50,16 +50,9 @@ namespace VKMVC.Controllers
                 }
                 else
                 {
-                    var userClaims = new List<Claim>()
-                    {
-                        new Claim(ClaimTypes.Name, user.Username),
-                        new Claim(ClaimTypes.Email, user.Email)
-                    };
-
-                    var grandmaIdentity = new ClaimsIdentity(userClaims, "User Identity");
-
-                    var userPrincipal = new ClaimsPrincipal(new[] {grandmaIdentity});
-                    await HttpContext.SignInAsync(userPrincipal);
+                    HttpContext.Response.Cookies.Append("Username", user.Username);
+                    HttpContext.Response.Cookies.Append("Email", user.Email);
+                    HttpContext.Response.Cookies.Append("Role", user.isAdmin ? "Admin" : "User");
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -105,7 +98,9 @@ namespace VKMVC.Controllers
         public async
             Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            HttpContext.Response.Cookies.Delete("Username");
+            HttpContext.Response.Cookies.Delete("Role");
+            HttpContext.Response.Cookies.Delete("Email");
             return RedirectToAction("Login", "Auth");
         }
     }
