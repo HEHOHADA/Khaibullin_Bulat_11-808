@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    foreach (var post in ViewBag.Posts)
+    {
+        <div>
+            <h4>@post.Name</h4>
+            <p>@post.Text</p>
+            @{
+                <div>
+                    <a asp-route-id="@post.Id" asp-action="Edit" asp-controller="Post">Edit post</a>
+                </div>
+                <div>
+                    <a asp-route-id="@post.Id" asp-action="Delete" asp-controller="Post">Delete post</a>
+                </div>
+            }
+            <div>
+                <a asp-route-id="@post.Id" asp-action="Create" asp-controller="Comment">Add comment</a>
+            </div>
+        </div>
+        <hr/>
+    }
+}
+<a asp-action="Create" asp-controller="Post">Crete post</a>

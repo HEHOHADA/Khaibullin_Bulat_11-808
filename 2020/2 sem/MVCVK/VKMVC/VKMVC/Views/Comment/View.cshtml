@@ -1,0 +1,27 @@
+﻿@model CommentModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+@{
+    foreach (var comment in ViewBag.Comments)
+    {
+        <div>
+            <div>
+                <p>@comment.Text</p>
+            </div>
+            @{
+                <div>
+                    <a asp-route-id="@comment.Id" asp-action="Edit" asp-controller="Comment">Edit comment</a>
+                </div>
+                <div>
+                    <a asp-route-id="@comment.Id" asp-action="Delete" asp-controller="Comment">Delete comment</a>
+                </div>
+            }
+        </div>
+    }
+    <div>
+        <a asp-route-id="@ViewBag.PostId" asp-action="Create" asp-controller="Comment">Add comment</a>
+    </div>
+}

@@ -1,0 +1,22 @@
+﻿@model UserModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form asp-action="Login" asp-controller="Auth">
+    <div>
+        <div>
+            <label asp-for="Email">Введите Email</label>
+            <input type="text" asp-for="Email" />
+        </div>
+        <div >
+            <label asp-for="Password">Введите пароль</label>
+            <input asp-for="Password" />
+        </div>
+        <div >
+            <input type="submit" value="Войти" />
+        </div>
+    </div>
+</form>

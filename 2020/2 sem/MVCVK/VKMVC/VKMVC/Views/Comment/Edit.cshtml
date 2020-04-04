@@ -1,0 +1,16 @@
+﻿@model VKMVC.ViewModels.CreateCommentModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<form asp-route-id="@ViewBag.CommentId" asp-action="Edit" asp-controller="Comment">
+    <div>
+        <label asp-for="Text">Type comment text</label>
+        <input type="text" value="@ViewBag.Text" asp-for="Text"/>
+        <div>
+            <button type="submit">Edit comment</button>
+        </div>
+    </div>
+</form>
