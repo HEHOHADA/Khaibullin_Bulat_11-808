@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace VKMVC.Models
 {
-    public class UserModel
+    public class UserModel : IdentityUser
     {
-        public int Id { get; set; }
+       
         public bool isAdmin { get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public string Password { get; set; }
+
         public List<PostModel> Posts { get; set; }
+        public List<CommentModel> Comments { get; set; }
     }
 }

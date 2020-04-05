@@ -10,6 +10,6 @@ namespace VKMVC.Models
         public string Text { get; set; }
         public List<CommentModel> Comments { get; set; }
         public DateTime CreateDate { get; set; }
-        public UserModel User { get; set; }
+        public UserModel Author { get; set; }
     }
 }

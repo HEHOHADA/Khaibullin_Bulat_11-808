@@ -26,7 +26,7 @@ namespace VKMVC.Controllers
     
         public IActionResult Index()
         {
-            var posts = dataBase.Posts.Include(user => user.User).ToList();
+            var posts = dataBase.Posts.Include(user => user.Author).ToList();
             ViewBag.Posts = posts;
             return View();
         }

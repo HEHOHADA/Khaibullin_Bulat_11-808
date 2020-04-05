@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 using VKMVC.DB;
 using VKMVC.Filter;
 using VKMVC.Models;
@@ -15,10 +14,12 @@ namespace VKMVC.Controllers
     public class CommentController : Controller
     {
         private BloggingContext dataBase;
+        private IAuthorizationService authorizationService;
 
-        public CommentController(BloggingContext context)
+        public CommentController(BloggingContext context, IAuthorizationService authorizationService)
         {
             dataBase = context;
+            this.authorizationService = authorizationService;
         }
 
         [HttpGet]
@@ -43,12 +44,14 @@ namespace VKMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateCommentModel model, int id)
         {
+            var post = await dataBase.Posts.FindAsync(id);
+            var user = await dataBase.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
             await dataBase.Comments.AddAsync(new CommentModel
             {
-                Author = await dataBase.User.FirstOrDefaultAsync(u => u.Email == User.Identity.Name),
+                Author = user,
                 CreateDate = DateTime.Now,
                 Text = model.Text,
-                Post = dataBase.Posts.FirstOrDefault(p => p.Id == id)
+                Post = post
             });
 
             await dataBase.SaveChangesAsync();
@@ -56,17 +59,23 @@ namespace VKMVC.Controllers
         }
 
         [HttpGet]
-        [Admin]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             var comment = dataBase.Comments.FirstOrDefault(c => c.Id == id);
-            ViewBag.Text = comment.Text;
-            ViewBag.CommentId = comment.Id;
-            return View();
+            var timeCheck = await authorizationService.AuthorizeAsync(User, comment, "CommentEditTime");
+            if (timeCheck.Succeeded)
+            {
+                ViewBag.Text = comment.Text;
+                ViewBag.CommentId = comment.Id;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
-        [Admin]
         public async Task<IActionResult> Edit(CommentModel model, int id)
         {
             var comment = dataBase.Comments
@@ -85,13 +94,13 @@ namespace VKMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var comment = dataBase.Comments
+            var comment = dataBase.Comments.Include(c => c.Post)
                 .FirstOrDefault(c => c.Id == id);
             var postId = comment.Post.Id;
             dataBase.Comments.Remove(comment);
-            dataBase.SaveChanges();
+            await dataBase.SaveChangesAsync();
             return RedirectToAction("View", "Comment", new {id = postId});
         }
     }

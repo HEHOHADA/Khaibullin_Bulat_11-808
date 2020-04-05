@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using Npgsql.PostgresTypes;
 using VKMVC.DB;
 using VKMVC.Filter;
 using VKMVC.Models;
@@ -31,10 +32,10 @@ namespace VKMVC.Controllers
         [UserFilter]
         public async Task<IActionResult> Create(PostModel model)
         {
-            var post = await dataBase.Posts.AddAsync(new PostModel
+            await dataBase.Posts.AddAsync(new PostModel
             {
                 Name = model.Name, Text = model.Text,
-                User =  dataBase.User.FirstOrDefault(u => u.Username == User.Identity.Name),
+                Author = dataBase.Users.FirstOrDefault(u => u.UserName == User.Identity.Name),
                 CreateDate = DateTime.Now
             });
             await dataBase.SaveChangesAsync();
@@ -55,26 +56,27 @@ namespace VKMVC.Controllers
 
             return View();
         }
-        
+
         [HttpPost]
         [UserFilter]
         public async Task<IActionResult> Edit(PostModel model, int id)
         {
-            var post = dataBase.Posts.FirstOrDefault(p => p.Id == id);
+            var post = await dataBase.Posts
+                .Include(u => u.Author)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (post != null)
             {
                 post.Name = model.Name;
                 post.Text = model.Text;
             }
+
             await dataBase.SaveChangesAsync();
             return RedirectToAction("Index", "Home");
         }
 
 
-       
-
         [HttpGet]
-        [UserFilter]
+        [Admin]
         public async Task<IActionResult> Delete(int id)
         {
             dataBase.Posts.Remove(dataBase.Posts.First(p => p.Id == id));

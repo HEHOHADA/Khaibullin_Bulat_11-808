@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using VKMVC.DB;
 using VKMVC.Models;
 using VKMVC.ViewModels;
 
@@ -15,11 +10,13 @@ namespace VKMVC.Controllers
 {
     public class AuthController : Controller
     {
-        private BloggingContext dataBase;
+        private readonly UserManager<UserModel> userManager;
+        private readonly SignInManager<UserModel> signInManager;
 
-        public AuthController(BloggingContext context)
+        public AuthController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager)
         {
-            dataBase = context;
+            this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [HttpGet]
@@ -28,6 +25,7 @@ namespace VKMVC.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
@@ -39,21 +37,18 @@ namespace VKMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserModel user = await dataBase.User.FirstOrDefaultAsync(u => u.Email == model.Email);
+                var user = await userManager.FindByEmailAsync(model.Email);
+                Console.WriteLine(user);
                 if (user == null)
                 {
-                    ModelState.AddModelError("", "Почты не существует. Попробуйте заново или зарегестрируйтесь");
+                    ModelState.AddModelError("", "Вы не  зарегестрированны");
+                    return View();
                 }
-                else if (user.Password != model.Password)
-                {
-                    ModelState.AddModelError("", "Пароль не совпадает. Попробуйте снова");
-                }
-                else
-                {
-                    HttpContext.Response.Cookies.Append("Username", user.Username);
-                    HttpContext.Response.Cookies.Append("Email", user.Email);
-                    HttpContext.Response.Cookies.Append("Role", user.isAdmin ? "Admin" : "User");
 
+                var result = await signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
+
+                if (result.Succeeded)
+                {
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -68,38 +63,35 @@ namespace VKMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserModel user = await dataBase.User.FirstOrDefaultAsync(u => u.Email == model.Email);
+                UserModel user = userManager.Users.FirstOrDefault(u => u.Email == model.Email);
+
                 if (user != null)
                 {
                     ModelState.AddModelError("", "Вы уже зарегестрированны");
                 }
-                else if (model.Email == "bulat1@yandex.ru")
+
+                Console.WriteLine(model.Email == "bulat1@yandex.ru");
+                var result = model.Email == "bulat1@yandex.ru"
+                    ?  userManager.CreateAsync(
+                        new UserModel {UserName = model.Username, Email = model.Email, isAdmin = true}, model.Password).Result
+                    : userManager.CreateAsync(
+                        new UserModel {UserName = model.Username, Email = model.Email, isAdmin = false},
+                        model.Password).Result;
+
+                if (result.Succeeded)
                 {
-                    await dataBase.User.AddAsync(new UserModel
-                        {Username = model.Username, Password = model.Password, Email = model.Email, isAdmin = true});
-                    await dataBase.SaveChangesAsync();
+                    return RedirectToAction("Login", "Auth");
                 }
                 else
-                {
-                    await dataBase.User.AddAsync(new UserModel
-                        {Username = model.Username, Password = model.Password, Email = model.Email, isAdmin = false});
-                    await dataBase.SaveChangesAsync();
-                }
-
-                return RedirectPermanent("Login");
+                    ModelState.AddModelError("", result.Errors.ToString());
             }
-            else
-                ModelState.AddModelError("", "Что-то пошло не так");
-
 
             return View();
         }
 
         public async Task<IActionResult> Logout()
         {
-            HttpContext.Response.Cookies.Delete("Username");
-            HttpContext.Response.Cookies.Delete("Role");
-            HttpContext.Response.Cookies.Delete("Email");
+            await signInManager.SignOutAsync();
             return RedirectToAction("Login", "Auth");
         }
     }
