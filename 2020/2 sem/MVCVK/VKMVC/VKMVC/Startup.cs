@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using VKMVC.DB;
+using VKMVC.Models;
 
 namespace VKMVC
 {
@@ -28,7 +23,6 @@ namespace VKMVC
         {
             services.AddControllersWithViews();
             services.AddDbContext<BloggingContext>();
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using VKMVC.Models;
 
 namespace VKMVC.DB
 {
-    public class BloggingContext : DbContext
+    public class BloggingContext :DbContext
     {
         public DbSet<CommentModel> Comments { get; set; }
         public DbSet<PostModel> Posts { get; set; }

@@ -76,13 +76,13 @@ namespace VKMVC.Controllers
                 else if (model.Email == "bulat1@yandex.ru")
                 {
                     await dataBase.User.AddAsync(new UserModel
-                        {Username = model.UserName, Password = model.Password, Email = model.Email, isAdmin = true});
+                        {Username = model.Username, Password = model.Password, Email = model.Email, isAdmin = true});
                     await dataBase.SaveChangesAsync();
                 }
                 else
                 {
                     await dataBase.User.AddAsync(new UserModel
-                        {Username = model.UserName, Password = model.Password, Email = model.Email, isAdmin = false});
+                        {Username = model.Username, Password = model.Password, Email = model.Email, isAdmin = false});
                     await dataBase.SaveChangesAsync();
                 }
 
@@ -95,8 +95,7 @@ namespace VKMVC.Controllers
             return View();
         }
 
-        public async
-            Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout()
         {
             HttpContext.Response.Cookies.Delete("Username");
             HttpContext.Response.Cookies.Delete("Role");

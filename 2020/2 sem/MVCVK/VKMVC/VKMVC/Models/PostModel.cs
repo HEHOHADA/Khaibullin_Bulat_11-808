@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VKMVC.Models
 {
-    public class PostModel
+    public class PostModel 
     {
         public int Id { get; set; }
         public string Name { get; set; }
