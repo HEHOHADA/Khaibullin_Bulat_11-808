@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using VKMVC.DB;
 using VKMVC.Filter;
 using VKMVC.Models;
+using VKMVC.Service;
+using VKMVC.ViewModels;
 
 namespace VKMVC
 {
@@ -33,6 +36,12 @@ namespace VKMVC
                     policy.Requirements.Add(new TimeAccessRequirement()));
             });
             services.AddSingleton<IAuthorizationHandler, PostAuthorizationHandler>();
+            bool isDev = Environment.GetEnvironmentVariable("ENVIRONMENT") == "Development";
+            services.AddSingleton<IMessageSender>(provider =>
+            {
+                if (isDev) return new EmailService();
+                else return new SMSService();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,10 +50,12 @@ namespace VKMVC
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                Environment.SetEnvironmentVariable("ENVIRONMENT", "Development");
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                Environment.SetEnvironmentVariable("ENVIRONMENT", "Production");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }

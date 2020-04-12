@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using VKMVC.DB;
 using VKMVC.Filter;
 using VKMVC.Models;
+using VKMVC.Service;
 using VKMVC.ViewModels;
 
 namespace VKMVC.Controllers
@@ -15,9 +16,12 @@ namespace VKMVC.Controllers
     {
         private BloggingContext dataBase;
         private IAuthorizationService authorizationService;
+        private IMessageSender message;
 
-        public CommentController(BloggingContext context, IAuthorizationService authorizationService)
+        public CommentController(BloggingContext context, IAuthorizationService authorizationService,
+            IMessageSender sender)
         {
+            message = sender;
             dataBase = context;
             this.authorizationService = authorizationService;
         }
@@ -53,9 +57,9 @@ namespace VKMVC.Controllers
                 Text = model.Text,
                 Post = post
             });
-
+            message.Send();
             await dataBase.SaveChangesAsync();
-            return RedirectToAction("View", "Comment", new {id = id});
+            return RedirectToAction("View", "Comment", new {id});
         }
 
         [HttpGet]
