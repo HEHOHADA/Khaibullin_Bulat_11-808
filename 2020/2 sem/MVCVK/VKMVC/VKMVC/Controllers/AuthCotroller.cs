@@ -71,12 +71,19 @@ namespace VKMVC.Controllers
                 }
 
                 Console.WriteLine(model.Email == "bulat1@yandex.ru");
-                var result = model.Email == "bulat1@yandex.ru"
-                    ?  userManager.CreateAsync(
-                        new UserModel {UserName = model.Username, Email = model.Email, isAdmin = true}, model.Password).Result
-                    : userManager.CreateAsync(
-                        new UserModel {UserName = model.Username, Email = model.Email, isAdmin = false},
-                        model.Password).Result;
+                IdentityResult result;
+                if (model.Email == "bulat1@yandex.ru")
+                {
+                    result = userManager.CreateAsync(
+                            new UserModel {UserName = model.Username, Email = model.Email, isAdmin = true},
+                            model.Password)
+                        .Result;
+                    HttpContext.Response.Cookies.Append("Role", "Admin");
+                }
+
+                result = userManager.CreateAsync(
+                    new UserModel {UserName = model.Username, Email = model.Email, isAdmin = false},
+                    model.Password).Result;
 
                 if (result.Succeeded)
                 {

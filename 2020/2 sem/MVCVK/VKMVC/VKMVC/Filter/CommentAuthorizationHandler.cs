@@ -5,7 +5,7 @@ using VKMVC.Models;
 
 namespace VKMVC.Filter
 {
-    public class PostAuthorizationHandler : AuthorizationHandler<TimeAccessRequirement, PostModel>
+    public class CommentAuthorizationHandler : AuthorizationHandler<TimeAccessRequirement, PostModel>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context,
             TimeAccessRequirement requirement, PostModel resource)

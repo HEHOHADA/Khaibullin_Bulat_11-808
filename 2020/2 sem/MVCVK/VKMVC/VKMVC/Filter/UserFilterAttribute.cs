@@ -8,9 +8,9 @@ namespace VKMVC.Filter
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            if (!context.HttpContext.Request.Cookies.ContainsKey("Username") &&
-                !context.HttpContext.Request.Cookies.ContainsKey("Email") &&
-                !context.HttpContext.Request.Cookies.ContainsKey("Role"))
+            Console.WriteLine(
+                context.HttpContext.User);
+            if(!context.HttpContext.User.Identity.IsAuthenticated)
                 context.Result = new RedirectToActionResult("Login", "Auth", null);
             base.OnActionExecuting(context);
         }
